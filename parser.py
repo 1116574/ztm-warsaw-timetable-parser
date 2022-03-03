@@ -40,10 +40,10 @@ if __name__ == '__main__':
             # Route descriptions and timetables
             if line.find('*LL') > -1:
                 # Handoff to parser
-                result = LL.LL(f)
-                print(result)
+                routes = LL.LL(f)
+                # print(result)
 
     with open(f'output/output.json', 'w') as t:
-        json.dump(result, t, indent=4)
+        json.dump(routes, t, indent=4)
 
     

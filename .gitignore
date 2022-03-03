@@ -1,3 +1,6 @@
 RA*.txt
 output/*
 output*
+__pycache__/
+*.pyc
+*.pyo

@@ -6,18 +6,24 @@ def TR(f):
     output = {}
     for line in f:
         if line.find('#TR') > -1:
+            print(f'  TR-RETURNING')
             return output
 
         match = re.search(regex, line)
         if match:
+            print(f'  TR: {match[1]}')
             # key found, pass contents
-            something = LW(f)
-            output['route_id'] = match[1]
-            output['from'] = match[2]
-            output['from_city'] = match[3]
-            output['to'] = match[4]
-            output['to_city'] = match[5]
-            output['dir'] = match[6]
-            output['index'] = match[7]
-            output['route_details'] = something
+            full, stops, roads_desc = LW(f)
+            output[match[1]] = {
+                "route_id": match[1],
+                "from": match[2],
+                "from_city": match[3],
+                "to": match[4],
+                "to_city": match[5],
+                "dir": match[6],
+                "index": match[7],
+                "route_roads_desc": roads_desc,
+                "route_stops": stops,
+                "route_details": full
+            }
     pass
