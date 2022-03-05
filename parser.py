@@ -1,14 +1,42 @@
 import json
+import datetime
+import argparse
+import os
+
 from parsers import LL
 from parsers import ZP
+
+# debug
 from rich import print
 
 
-PARSE_LINES = True
-PARSE_STOPS = False
-
 if __name__ == '__main__':
-    with open('RA220202.TXT', 'r') as f:
+    argparser = argparse.ArgumentParser(description='Process data from Warsaw public transit authority to json format[s]')
+    argparser.add_argument('-s', '--stops', help='dont parse stops (default: True)', default=True, action='store_false')
+    argparser.add_argument('-l', '--lines', help='dont parse line info (default: True)', default=True, action='store_false')
+    argparser.add_argument('-f', '--file', help='name of input file (default: get latest from web)', default=False)
+    args = argparser.parse_args()
+    print(args)
+
+    PARSE_LINES = args.lines
+    PARSE_STOPS = args.stops
+    FILE = args.file
+
+
+    if not FILE:
+        today = datetime.datetime.now()
+        today = today.strftime('%y%m%d')
+        filename = f'RA{today}.TXT'
+        if filename in os.listdir():
+            FILE = filename
+        else:
+            print('Attmpting to download files')
+            from ftp_downloader import get_file
+            get_file()
+    else:
+        filename = args.file
+
+    with open(f'RA{today}.TXT', 'r') as f:
         for line in f:
             cache = []  # ?
 

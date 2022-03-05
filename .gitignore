@@ -1,6 +1,8 @@
 RA*.txt
 output/*
 output*
+timetable.7z
+
 __pycache__/
 *.pyc
 *.pyo
