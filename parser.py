@@ -15,6 +15,7 @@ if __name__ == '__main__':
     argparser.add_argument('-s', '--stops', help='dont parse stops (default: True)', default=True, action='store_false')
     argparser.add_argument('-l', '--lines', help='dont parse line info (default: True)', default=True, action='store_false')
     argparser.add_argument('-f', '--file', help='name of input file (default: get latest from web)', default=False)
+    # TODO: add output path
     args = argparser.parse_args()
     print(args)
 
@@ -36,7 +37,7 @@ if __name__ == '__main__':
     else:
         filename = args.file
 
-    with open(f'RA{today}.TXT', 'r') as f:
+    with open(filename, 'r') as f:
         for line in f:
             cache = []  # ?
 
@@ -70,6 +71,8 @@ if __name__ == '__main__':
 
             # save
             # Route descriptions and timetables
+            # LL ─ TR ─┬ RP ─┬ TD ─┬ WG
+            #          └ LW  └ OP  └ OD
             if line.find('*LL') > -1 and PARSE_LINES:
                 # Handoff to parser
                 routes, timetables, symbols = LL.LL(f)
