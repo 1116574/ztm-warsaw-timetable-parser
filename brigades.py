@@ -110,10 +110,16 @@ def match(request_queue, APIKEY):
                     # TODO: 32h time format testing
                     if departure['time'] == trip_time:  # It matches!
                         # print('aaaa', line, entry[0], departure['brigade'], departure['heading'])
-                        output[line][entry[0]] = {
-                            'brigade': departure['brigade'],
-                            'heading': departure['heading']  # nice bonus, especially for exceptional routes (to depot etc), I guess?
-                        }
+                        if departure['brigade'] in output[line]:
+                            output[line][departure['brigade']].append({
+                                'trip_id': entry[0],
+                                'heading': departure['heading']  # nice bonus, especially for exceptional routes (to depot etc), I guess?
+                            })
+                        else:
+                            output[line][departure['brigade']] = [{
+                                'trip_id': entry[0],
+                                'heading': departure['heading']  # nice bonus, especially for exceptional routes (to depot etc), I guess?
+                            }]
 
     return output
 
@@ -122,7 +128,7 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-s', '--save', help='Save request_queue (default: False)', default=False, action='store_true')
     argparser.add_argument('-r', '--requests', help='Hit API from saved request_queue file (default: False)', default=False, action='store_true')
-    argparser.add_argument('-o', '--offline', help='Dont make any web requests, just save the file (default: False)', default=False, action='store_true')
+    # argparser.add_argument('-o', '--offline', help='Dont make any web requests, just save the file (default: False)', default=False, action='store_true')
     args = argparser.parse_args()
     print(args)
 
@@ -150,8 +156,7 @@ if __name__ == '__main__':
         with open('output/request_queue.json', 'r') as f:
             request_queue = json.load(f)
 
-    if not args.offline:
-        brigades = match(request_queue, APIKEY)
+    brigades = match(request_queue, APIKEY)
 
-        with open(f'output/brigades.json', 'w') as t:
-            json.dump(brigades, t, indent=4)
+    with open(f'output/brigades.json', 'w') as t:
+        json.dump(brigades, t, indent=4)
