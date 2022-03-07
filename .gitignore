@@ -2,6 +2,7 @@ RA*.txt
 output/*
 output*
 timetable.7z
+apikey.txt
 
 __pycache__/
 *.pyc
