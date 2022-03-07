@@ -33,5 +33,5 @@ def TR(f):
 
             timetable, symbols = RP(f)
             timetable_output[match[1]] = timetable
-            symbols_output[match[1]] = symbols
+            # symbols_output[match[1]] = symbols
     pass

@@ -24,7 +24,7 @@ def RP(f):
                 "date": exp_date,
             }
 
-            symbols_output[match[1]] = symbols
+            # symbols_output[match[1]] = symbols
 
             # now to *TD and *OP
     pass

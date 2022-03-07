@@ -121,7 +121,8 @@ def match(request_queue, APIKEY):
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-s', '--save', help='Save request_queue (default: False)', default=False, action='store_true')
-    argparser.add_argument('-r', '--requests', help='Just hit API from saved request_queue file (default: False)', default=False, action='store_true')
+    argparser.add_argument('-r', '--requests', help='Hit API from saved request_queue file (default: False)', default=False, action='store_true')
+    argparser.add_argument('-o', '--offline', help='Dont make any web requests, just save the file (default: False)', default=False, action='store_true')
     args = argparser.parse_args()
     print(args)
 
@@ -138,13 +139,18 @@ if __name__ == '__main__':
         with open(f'output/request_queue.json', 'w') as t:
             json.dump(request_queue, t, indent=4)
 
-    with open('apikey.txt', 'r') as f:
-        APIKEY = f.read()
+    try:
+        with open('apikey.txt', 'r') as f:
+            APIKEY = f.read()
+    except FileNotFoundError:
+        print('You havent provided apikey.txt file!')
+        quit()
 
     if args.requests:
         with open('output/request_queue.json', 'r') as f:
             request_queue = json.load(f)
 
+    if not args.offline:
         brigades = match(request_queue, APIKEY)
 
         with open(f'output/brigades.json', 'w') as t:
