@@ -15,7 +15,7 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser(description='Process data from Warsaw public transit authority to json format[s]')
     argparser.add_argument('-s', '--stops', help='Parse stops (default: True)', default=True, action='store_false')
     argparser.add_argument('-r', '--routes', help='Parse routes (default: True)', default=True, action='store_false')
-    argparser.add_argument('-t', '--timetables', help='Parse timetables (default: True)', default=True, action='store_false')
+    argparser.add_argument('-t', '--timetables', help='Parse timetables (default: True)', default=True, action='store_false')  # TODO: make it depedent on routes
     argparser.add_argument('-sm', '--symbols', help='Parse symbols (default: True)', default=True, action='store_false')
     argparser.add_argument('-st', '--stop_times', help='Parse stop_times (used in RT) (default: True)', default=True, action='store_false')
     argparser.add_argument('-c', '--calendar', help='Parse calendar (used in RT) (default: True)', default=True, action='store_false')
@@ -23,6 +23,15 @@ if __name__ == '__main__':
     # TODO: add output path
     args = argparser.parse_args()
     print(args)
+
+    if False:  # debug
+        args.stops = False
+        # args.routes = False
+        # args.timetables = False
+        args.symbols = False
+        args.stop_times = False
+        args.calendar = False
+        args.file = 'RA220306.TXT'
 
     PARSE_STOPS = args.stops
     FILE = args.file

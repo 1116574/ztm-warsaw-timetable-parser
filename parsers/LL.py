@@ -14,7 +14,7 @@ def LL(f, parse_stop_times=True, parse_symbols=True, parse_timetables=True, pars
     # output = defaultdict(list)
     for line in f:
         if line.find('#LL') > -1:
-            return lines_output, timetable_output, symbols_output
+            return lines_output, timetable_output, symbols_output, stop_times
         
         match = re.search(regex, line)
         if match:
@@ -37,6 +37,6 @@ def LL(f, parse_stop_times=True, parse_symbols=True, parse_timetables=True, pars
             if parse_stop_times:
                 stop_times[match[1]] = WK(f)
 
-            if match[1] == '103':
-                return lines_output, timetable_output, symbols_output, stop_times
+            # if match[1] == '189':
+            #     return lines_output, timetable_output, symbols_output, stop_times
             

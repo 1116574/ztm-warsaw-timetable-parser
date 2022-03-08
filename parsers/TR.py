@@ -17,7 +17,7 @@ def TR(f):
         if match:
             print(f'  TR: {match[1]}')
             # key found, pass contents
-            full, stops, roads_desc = LW(f)
+            full, stops, roads_desc, route_type = LW(f)
             route_output[match[1]] = {
                 "route_id": match[1],
                 "from": match[2],
@@ -26,6 +26,7 @@ def TR(f):
                 "to_city": match[5],
                 "dir": match[6],
                 "index": match[7],
+                "route_type": route_type,
                 "route_roads_desc": roads_desc,
                 "route_stops": stops,
                 "route_details": full

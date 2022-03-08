@@ -12,16 +12,15 @@ def LW(f):
 
     REGEX_ZONE = r" {15}=+((?: PRZYSTANEK GRANICZNY )|(?:.+(\d).+))=+ +\|  \|  \|"
 
-    # TODO
     ROUTE_STOP_EXPRESS_SHORTENED = r" {15}~~~~~~~? (TRASA SKRÓCONA|KURS SKRÓCONY)"
 
-    # TODO
     REGEX_NEW_ROUTE_BEGIN = r" {23}(<<NOWA TRASA>>)"
     REGEX_NEW_ROUTE_END = r" {23}(<<KONIEC NOWEJ TRASY>>)"
 
     full_output = []
     stops_output = []
     roads_output = []
+    route_type = 'normal'  # normal | shortened
 
     def road_change(name):
         roads_output.append(name)
@@ -42,7 +41,7 @@ def LW(f):
     for line in f:
         if line.find('#LW') > -1:
             # roads_output = ' - '.join(roads_output)
-            return full_output, stops_output, roads_output
+            return full_output, stops_output, roads_output, route_type
 
         match = re.search(REGEX_STOP, line)  # Stop
         if match:
@@ -63,21 +62,50 @@ def LW(f):
             })
 
             stops_output.append(match[3])
+
+            continue
             
-        elif re.search(REGEX_ROAD, line):
-            match = re.search(REGEX_ROAD, line)  # inefficient! (double regex matching) but since its relatively rare we let this pass
+        match = re.search(REGEX_ROAD, line)
+        if match:
             full_output.append(road_change(match[1]))
-        elif re.search(REGEX_ZONE, line):
-            match = re.search(REGEX_ZONE, line)
+            continue
+    
+        match = re.search(REGEX_ZONE, line)
+        if match:
             full_output.append(zone_change(match[2]))
-        elif re.search(REGEX_DETOUR_BEGIN, line):
-            match = re.search(REGEX_DETOUR_BEGIN, line)
+            continue
+
+        match = re.search(REGEX_DETOUR_BEGIN, line)
+        if match:
             full_output.append({
                 "type": "detour_begin"
             })
-        elif re.search(REGEX_DETOUR_END, line):
-            match = re.search(REGEX_DETOUR_END, line)
+            continue
+
+
+        match = re.search(REGEX_DETOUR_END, line)
+        if match:
             full_output.append({
                 "type": "detour_end"
             })
+            continue
+        
+        match = re.search(ROUTE_STOP_EXPRESS_SHORTENED, line)
+        if match:
+            route_type = 'shortened'
+            continue
+
+        match = re.search(REGEX_NEW_ROUTE_BEGIN, line)
+        if match:
+            full_output.append({
+                "type": "new_route_begin"
+            })
+            continue
+
+        match = re.search(REGEX_NEW_ROUTE_END, line)
+        if match:
+            full_output.append({
+                "type": "new_route_end"
+            })
+            continue
     pass
