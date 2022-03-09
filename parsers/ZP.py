@@ -2,7 +2,7 @@ import re
 from .PR import PR
 
 def ZP(f):
-    REGEX = r" {3}(\d{4}) {3}(\S+) +(.{2})  (.+)"
+    REGEX = r" {3}(\d{4}) {3}(.+) +(.{2})  (.+)"
     output = {}
     # output = defaultdict(list)
     for line in f:
